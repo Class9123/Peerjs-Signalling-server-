@@ -1,26 +1,16 @@
-const { PeerServer } = require('peer');
+var express = require('express');
+var app = express();
+var ExpressPeerServer = require('peer').ExpressPeerServer;
 
-const peerServer = PeerServer({
-  port: process.env.PORT || 5000, // Use dynamic port binding for Render
-  path: '/myapp',
-  corsOptions: {
-    origin: '*', // Allow all origins. You can specify specific origins instead of '*'.
-    methods: 'GET,POST,PUT,DELETE', // Specify allowed methods
-  }
+
+// Server options
+var options = {
+    debug: true
+};
+var server = require('http').createServer(app);
+
+app.use('/peerjs', ExpressPeerServer(server, options));
+const PORT = process.env.PORT || 5000
+server.listen(PORT, "localhost", () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-peerServer.on('connection', (client) => {
-  const log = `Client connected: ${client.getId()} at ${new Date().toISOString()}`;
-  console.log(log);
-});
-
-peerServer.on('disconnect', (client) => {
-  const log = `Client disconnected: ${client.getId()} at ${new Date().toISOString()}`;
-  console.log(log);
-});
-
-peerServer.on('error', (err) => {
-  console.error(`PeerJS Server Error: ${err.message}`);
-});
-
-console.log('PeerJS signaling server running on port', process.env.PORT || 5000);
