@@ -1,15 +1,13 @@
 const { PeerServer } = require('peer');
 
-const DEFAULT_PORT = 5000
 const peerServer = PeerServer({
-  port: process.env.PORT || DEFAULT_PORT, // Use dynamic port binding for Render
+  port: process.env.PORT || 5000, // Use dynamic port binding for Render
   path: '/myapp'
 });
 
 peerServer.on('connection', (client) => {
   const log = `Client connected: ${client.getId()} at ${new Date().toISOString()}`;
   console.log(log);
-  
 });
 
 peerServer.on('disconnect', (client) => {
@@ -17,5 +15,8 @@ peerServer.on('disconnect', (client) => {
   console.log(log);
 });
 
+peerServer.on('error', (err) => {
+  console.error(`PeerJS Server Error: ${err.message}`);
+});
 
-console.log('PeerJS signaling server running on port', process.env.PORT || DEFAULT_PORT);
+console.log('PeerJS signaling server running on port', process.env.PORT || 5000);
