@@ -2,7 +2,11 @@ const { PeerServer } = require('peer');
 
 const peerServer = PeerServer({
   port: process.env.PORT || 5000, // Use dynamic port binding for Render
-  path: '/myapp'
+  path: '/myapp',
+  corsOptions: {
+    origin: '*', // Allow all origins. You can specify specific origins instead of '*'.
+    methods: 'GET,POST,PUT,DELETE', // Specify allowed methods
+  }
 });
 
 peerServer.on('connection', (client) => {
